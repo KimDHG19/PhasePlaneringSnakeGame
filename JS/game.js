@@ -23,8 +23,10 @@ let Game = {
 		game.load.image('snake', 'assets/image/snake.png');
 		game.load.image('food', 'assets/image/apple.png');
 
-		game.load.audio('eat', './assets/eat.m4a');
-		game.load.audio('die', './assets/die.m4a');
+		game.load.audio('eat', './assets/sound/eat.mp3');
+		game.load.audio('die', './assets/sound/die.mp3');
+
+		game.load.image('arrow', './assets/image/arrow.png');
 	},
 
 	create: function () {
@@ -49,32 +51,29 @@ let Game = {
 
 		this.placeFood();
 
-		if (!game.device.desktop){
-			this.addMobileInputs()
+		this.leftBtn = game.add.sprite(140, 340, 'arrow');
+		this.upBtn = game.add.sprite(180, 300, 'arrow');
+		this.rightBtn = game.add.sprite(220, 340, 'arrow');
+		this.downBtn = game.add.sprite(180, 380, 'arrow');
 
-			this.leftBtn = game.add.sprite(140, 340, 'arrow');
-			this.upBtn = game.add.sprite(180, 300, 'arrow');
-			this.rightBtn = game.add.sprite(220, 340, 'arrow');
-			this.downBtn = game.add.sprite(180, 380, 'arrow');
+		[this.leftBtn, this.upBtn, this.rightBtn, this.downBtn].forEach(btn => {
+			btn.height = this.rez * 2;
+			btn.width = this.rez * 2;
+			btn.anchor.setTo(.5, .5);
+			btn.inputEnabled = true;
+		})
 
-			[this.leftBtn, this.upBtn, this.rightBtn, this.downBtn].forEach(btn => {
-				btn.height = this.rez * 2;
-				btn.width = this.rez * 2;
-				btn.anchor.setTo(.5, .5);
-				btn.inputEnabled = true;
-			})
+		this.leftBtn.angle -= 90;
+		this.rightBtn.angle += 90;
+		this.downBtn.angle += 180;
 
-			this.leftBtn.angle -= 90;
-			this.rightBtn.angle += 90;
-			this.downBtn.angle += 180;
+		this.leftBtn.events.onInputDown.add(this.mobileControl, this);
+		this.upBtn.events.onInputDown.add(this.mobileControl, this);
+		this.rightBtn.events.onInputDown.add(this.mobileControl, this);
+		this.downBtn.events.onInputDown.add(this.mobileControl, this);
 
-			this.leftBtn.events.onInputDown.add(this.mobileControl, this);
-			this.upBtn.events.onInputDown.add(this.mobileControl, this);
-			this.rightBtn.events.onInputDown.add(this.mobileControl, this);
-			this.downBtn.events.onInputDown.add(this.mobileControl, this);
-
-		}
 	},
+
 
 	mobileControl: function (btn) {
 		let x, y;
@@ -101,6 +100,8 @@ let Game = {
 				y = 0;
 				break;
 		}
+		this.snake.xDir = x;
+		this.snake.yDir = y;
 	},
 
 
