@@ -52,49 +52,55 @@ let Game = {
 		if (!game.device.desktop){
 			this.addMobileInputs()
 
-			this.button.events.onInputOver.add(this.addMobileInputs, this);
-			this.button.events.onInputOut.add(this.addMobileInputs, this);
-			this.button.events.onInputDown.add(this.addMobileInputs, this);
-			this.button.events.onInputUp.add(this.addMobileInputs, this);
+			this.leftBtn = game.add.sprite(140, 340, 'arrow');
+			this.upBtn = game.add.sprite(180, 300, 'arrow');
+			this.rightBtn = game.add.sprite(220, 340, 'arrow');
+			this.downBtn = game.add.sprite(180, 380, 'arrow');
+
+			[this.leftBtn, this.upBtn, this.rightBtn, this.downBtn].forEach(btn => {
+				btn.height = this.rez * 2;
+				btn.width = this.rez * 2;
+				btn.anchor.setTo(.5, .5);
+				btn.inputEnabled = true;
+			})
+
+			this.leftBtn.angle -= 90;
+			this.rightBtn.angle += 90;
+			this.downBtn.angle += 180;
+
+			this.leftBtn.events.onInputDown.add(this.mobileControl, this);
+			this.upBtn.events.onInputDown.add(this.mobileControl, this);
+			this.rightBtn.events.onInputDown.add(this.mobileControl, this);
+			this.downBtn.events.onInputDown.add(this.mobileControl, this);
 
 		}
 	},
 
-	addMobileInputs: function () {
-		this.rightButton = game.add.sprite(50, 50, 'rightButton');
-		this.rightButton.inputEnabled = true;
-		this.rightButton.events.onInputOver.add(function (){this.moveRight=true;}, this);
-		this.rightButton.events.onInputOut.add(function (){this.moveRight=true;}, this);
-		this.rightButton.events.onInputDown.add(function (){this.moveRight=true;}, this);
-		this.rightButton.events.onInputUp.add(function (){this.moveRight=true;}, this);
-		this.rightButton.alpha = 0.5;
+	mobileControl: function (btn) {
+		let x, y;
 
-		this.leftButton = game.add.sprite(300, 247, 'leftButton');
-		this.leftButton.inputEnabled = true;
-		this.leftButton.events.onInputOver.add(function (){this.moveRight=true;}, this);
-		this.leftButton.events.onInputOut.add(function (){this.moveRight=true;}, this);
-		this.leftButton.events.onInputDown.add(function (){this.moveRight=true;}, this);
-		this.leftButton.events.onInputUp.add(function (){this.moveRight=true;}, this);
-		this.leftButton.alpha = 0.5;
-
-
-		this.upButton = game.add.sprite(325, 267, 'upButton');
-		this.upButton.inputEnabled = true;
-		this.upButton.events.onInputOver.add(function (){this.moveRight=true;}, this);
-		this.upButton.events.onInputOut.add(function (){this.moveRight=true;}, this);
-		this.upButton.events.onInputDown.add(function (){this.moveRight=true;}, this);
-		this.upButton.events.onInputUp.add(function (){this.moveRight=true;}, this);
-		this.upButton.alpha = 0.5;
-
-
-		this.downButton = game.add.sprite(300, 247, 'downButton');
-		this.downButton.inputEnabled = true;
-		this.downButton.events.onInputOver.add(function (){this.moveRight=true;}, this);
-		this.downButton.events.onInputOut.add(function (){this.moveRight=true;}, this);
-		this.downButton.events.onInputDown.add(function (){this.moveRight=true;}, this);
-		this.downButton.events.onInputUp.add(function (){this.moveRight=true;}, this);
-		this.downButton.alpha = 0.5;
-
+		switch (btn.angle) {
+			case -180:
+				// Down
+				x = 0;
+				y = 1;
+				break;
+			case 0:
+				// Up
+				x = 0;
+				y = -1;
+				break;
+			case -90:
+				// Left
+				x = -1;
+				y = 0;
+				break;
+			default:
+				// Right (and other)
+				x = 1;
+				y = 0;
+				break;
+		}
 	},
 
 
@@ -113,7 +119,7 @@ let Game = {
 			this.snake.yDir = 0;
 		}
 
-		this.counter += 0.1;
+			this.counter += 0.1;
 
 		if (this.counter > this.frames - 1 && this.counter < this.frames + 1) {
 			this.counter = 0;
