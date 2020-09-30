@@ -27,9 +27,13 @@ let Game = {
 		game.load.audio('die', './assets/sound/die.mp3');
 
 		game.load.image('arrow', './assets/image/arrow.png');
+
+		game.load.audio('background', './assets/sound/background.mp3');
 	},
 
 	create: function () {
+		this.backgroundSound = game.add.sound('background');
+		this.backgroundSound.loopFull();
 		game.stage.backgroundColor = '#c1c7ff';
 		this.cursors = game.input.keyboard.createCursorKeys();
 		this.frames = 4;
@@ -74,7 +78,6 @@ let Game = {
 
 	},
 
-
 	mobileControl: function (btn) {
 		let x, y;
 
@@ -106,6 +109,7 @@ let Game = {
 
 
 	update: function () {
+
 		if (this.cursors.down.isDown) {
 			this.snake.xDir = 0;
 			this.snake.yDir = 1;
